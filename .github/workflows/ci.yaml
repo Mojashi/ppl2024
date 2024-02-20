@@ -1,0 +1,17 @@
+name: Render ppl2024.pdf
+on: push
+jobs:
+  render-paper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: typst-community/setup-typst@v3
+        with:
+          cache-dependency-path: requirements.typ
+      - run: typst compile ppl.typ ppl2024.pdf
+      # upload pages
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ppl2024
+          path: ppl2024.pdf
+          
