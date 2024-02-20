@@ -67,7 +67,7 @@
   set page(
     width: width,
     height: height,
-    margin: (top: 0.5in, left: 0.5in, right: 0.5in, bottom: 0.5in),
+    margin: (top: 0.2in, left: 0.5in, right: 0.5in, bottom: 0.2in),
   )
 
   // Configure equation numbering and spacing.

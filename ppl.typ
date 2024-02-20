@@ -28,7 +28,9 @@
       #block(stroke: black, width: 1.5cm, inset: 0.2cm, [#upper])],
     [#set align(center)
       #box(stroke: black, width: 1.5cm, inset: 0.2cm, [#lower])],
-  ))
+  ),
+  baseline: 15pt,
+  )
 }
 
 #let section(
@@ -77,12 +79,10 @@
 
     #v(20pt)
 
-    #sub_title("例: PCP[3,3]のインスタンス")
-    #set align(center)
+    #sub_title("例: PCP[3,3]のインスタンス") #h(20pt)
     #pcp_tile("100", "1")
     #pcp_tile("0", "100")
     #pcp_tile("1", "00")
-    #set align(left)
 
     これの解は “1311322”
     #pcp_tile("100", "1")
@@ -106,10 +106,29 @@
   #sub_title(fill: rgb("#ee3030"), "本研究による更新")
 
   - PCP[3,3]は*完全解決* (以前発見されていた75タイルが最長)
-  - PCP[3,4]は残り*25個*
+  - PCP[3,4]は残り*26個*
 
 ], stroke_color: rgb("#0053d6"), font_color: rgb("#ffffff"))
 
+#section(
+  stroke_color: rgb("#ee5050"),
+  font_color: rgb("#ffffff"),
+  "未解決インスタンスの例",
+  [
+    解けますか？
+
+    #box(width: 100%, [
+      #set align(center)
+      #pcp_tile("1111", "110") #pcp_tile("1110", "1") #pcp_tile("1", "1111")
+      #h(50pt)
+      #box(baseline: 30pt, figure(
+        numbering: none,
+        caption: "この問題にチャレンジできるサイト",
+        image("./images/qr.png", width: 70pt, height: 70pt),
+      ))
+    ])
+  ],
+)
 #section(
   "文字列制約としてのアプローチ",
   [
@@ -128,10 +147,30 @@
     #block(
       [*$v circle.stroked.tiny h(x)=v circle.stroked.tiny g(x)$となる$x$が存在するか?*],
     )
-  ],
+    #set align(left)
+    #sub_title([$v$ の作り方])
+
+    単語 $w$ の出現回数を数えるようなトランスデューサ$v_w$を使うことができる.
+    1. 単語集合 $W=\{\}$
+    2. $V_w=\{v_w | w in W\}$ から, 各単語の出現回数を出力する $v$ を作る.
+    3. $v circle.stroked.tiny h(x)=v circle.stroked.tiny g(x)$ を解く
+    4. $x$ が存在し, $h(x) eq.not g(x)$ なら, この $x$ をブロックするような単語を見つけ, $W$に追加.
+ ],
 )
 #set align(left)
 
+
+#section("参考文献", [
+  #set text(size: 12pt)
+  #show bibliography: none
+  #cite(<pcp2n>, form: "full")
+
+  #cite(<tacklepcp>, form: "full")
+
+  #cite(<RAHN2008115>, form: "full")
+  #bibliography("pcp.bib")
+])
+#v(150pt)
 #section(
   "遷移システムとしてのアプローチ",
   [
@@ -152,32 +191,13 @@
     この遷移システムにおいて, $T$ で閉じ, $I$ を含み, $epsilon$ を含まない*正規言語*
     $italic("Inv")$ を発見したい. (正確には, 上下でそれぞれ) この $italic("Inv")$ の発見方法に幾つかの方法を検討した.
     - 正規言語を述語とするPDRによる方法
-      - Interpolationが一般に計算できるわけではないが, blockingなどは可能
+      - Interpolationが簡単に計算できるわけではないが, 反例のblockingなどは可能
       - Predicate Abstraction系は, 具体的な反例を構成するのが難しい
     - SATソルバによる $italic("Inv")$ の発見
     - 部分文字列パターンの探索
   ],
 )
 
-#section(
-  stroke_color: rgb("#ee5050"),
-  font_color: rgb("#ffffff"),
-  "未解決インスタンスの例",
-  [
-    解けますか？
-
-    #box(width: 100%, [
-      #set align(center)
-      #pcp_tile("1111", "110") #pcp_tile("1110", "1") #pcp_tile("1", "1111")
-      #h(50pt)
-      #box(baseline: 10pt, figure(
-        numbering: none,
-        caption: "この問題にチャレンジできるサイト",
-        image("./images/qr.png", width: 70pt, height: 70pt),
-      ))
-    ])
-  ],
-)
 
 #section(
   "部分文字列パターンの探索",
@@ -240,10 +260,12 @@ start [label="", shape="point"]      }
 
             ```,
     ),
-    caption: [閉じた遷移の例 #pcp_tile(1111,1) #pcp_tile(00,11) #pcp_tile(1,1100)],
+    caption: [閉じた遷移の例 scale#pcp_tile(1111,1) #pcp_tile(00,11) #pcp_tile(1,1100)],
   )
   ],
 )
+
+
 
 #section("実験", [
   #table(
@@ -251,25 +273,10 @@ start [label="", shape="point"]      }
     inset: 10pt,
     align: horizon,
     [],
-    [*PDR*],
-    [*s*],
-    $ 4 $,
-    [
-      $D$: outer radius \
-      $d$: inner radius
-    ],
-    $ sqrt(2) / 12 a^3 $,
-    [$a$: edge length],
+    [*ベクトルの一致による緩和*],
+    [*部分文字列パターン*],
+    [PCP[3,4] #cite(<tacklepcp>)の残り],
+    [2738],
+    [???]
   )
-])
-
-#section("参考文献", [
-  #set text(size: 12pt)
-  #show bibliography: none
-  #cite(<pcp2n>, form: "full")
-
-  #cite(<tacklepcp>, form: "full")
-
-  #cite(<RAHN2008115>, form: "full")
-  #bibliography("pcp.bib")
 ])

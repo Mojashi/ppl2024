@@ -9,9 +9,8 @@ jobs:
         with:
           cache-dependency-path: requirements.typ
       - run: typst compile ppl.typ ppl2024.pdf
-      # upload pages
       - uses: actions/upload-artifact@v2
         with:
           name: ppl2024
           path: ppl2024.pdf
-          
+
