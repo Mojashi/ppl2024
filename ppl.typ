@@ -33,6 +33,7 @@
 
 #let section(
   title,
+  number,
   content,
   stroke_color: rgb("#d8dddd"),
   font_color: rgb("#0053d6"),
@@ -47,8 +48,9 @@
           font: "Hiragino Kaku Gothic ProN",
           weight: "bold",
           size: 20pt,
-          title,
-        )])
+          [
+            #if number != none [#box(text(number, size: 0.9em), baseline: 2pt, stroke: font_color, inset: 2pt)] #title],
+      )])
     ], [
       #set align(left)
       #block(inset: 0.5cm, [#content])
@@ -70,15 +72,16 @@
 
 #section(
   "Postの対応問題とは",
+  "A",
   [
-    #indent「上下に文字列が書いてある #text("s", fill: red) 種類のタイルを好きな枚数好きな順番で並べて,
+    #indent「上下に文字列が書いてある #text("s", fill: red, weight: "bold") 種類のタイルを好きな枚数好きな順番で並べて,
     上下で同じ文字列を作れるか」という問題で, 決定不能.
 
-    - *PCP[s,w]* ... s 種類のタイル $and$ 各タイルは最長でw文字
+    - *PCP[#text("s", fill: red, weight: "bold"),#text("w", fill: blue, weight: "bold")]* ... #text("s", fill: red, weight: "bold") 種類のタイル $and$ 各タイルは最長で #text("w", fill: blue, weight: "bold") 文字
 
     #v(20pt)
 
-    #sub_title("例: PCP[3,3]のインスタンス")
+    #sub_title([例: PCP[#text("3", fill: red, weight: "bold"),#text("4", fill: blue, weight: "bold")]のインスタンス])
     #h(30pt)
     #box(stack(
       [#set align(center)
@@ -103,7 +106,7 @@
   ],
 )
 
-#section("貢献", [
+#section("貢献", "B", [
   #sub_title("これまでの状況")
 
   - PCP[2,n]は決定可能である@pcp2n
@@ -113,35 +116,32 @@
   #sub_title(fill: rgb("#ee3030"), "本研究による更新")
 
   - PCP[3,3]は*完全解決* (以前発見されていた75タイルが最長)
-    - PCP[3,4]は残り*26個*
+    - PCP[3,4]は残り*9個*
 
 ], stroke_color: rgb("#0053d6"), font_color: rgb("#ffffff"))
 
 #section(
   stroke_color: rgb("#ee5050"),
   font_color: rgb("#ffffff"),
-  "未解決インスタンスの例",
+  "未解決インスタンスの例", none,
   [
-    解けますか？
-
     #box(width: 100%, [
       #set align(center)
       #pcp_tile("1111", "110") #pcp_tile("1110", "1") #pcp_tile("1", "1111")
       #h(50pt)
       #box(baseline: 30pt, figure(
         numbering: none,
-        caption: "この問題にチャレンジできるサイト",
         image("./images/qr.png", width: 70pt, height: 70pt),
       ))
     ])
   ],
 )
 #section(
-  "文字列制約としてのアプローチ",
+  "文字列制約としてのアプローチ", "C",
   [
     #sub_title("問題の定式化")
 
-    $h,g: Delta^* -> Sigma^*$ ... 上段・下段を表す写像//TODO：例を追加
+    $h,g: Delta^* -> Sigma^*$ ... 上段・下段を表す写像
 
     *例*. $h(\"1\")=\"100\"$ #h(10pt) $h(\"132\")=\"10010\"$ #h(10pt) $g(\"13\")=\"100\"$ 
 
@@ -168,7 +168,22 @@
 )
 #set align(left)
 
-#section("参考文献", [
+#section("実験", "H", [
+  #table(
+    columns: (1fr, auto, auto, auto),
+    inset: 10pt,
+    align: horizon,
+    [],
+    [*ベクトルの一致による緩和*],
+    [*部分文字列パターン*],
+    [*PDR*],
+    [#text([PCP[3,4] #cite(<tacklepcp>)の残り], size: 0.8em)],
+    [3041],
+    [2167],
+    [???],
+  )
+])
+#section(text("参考文献", size:0.8em), none, [
   #set text(size: 12pt)
   #show bibliography: none
   #cite(<pcp2n>, form: "full")
@@ -178,9 +193,8 @@
   #cite(<RAHN2008115>, form: "full")
   #bibliography("pcp.bib")
 ])
-#v(150pt)
 #section(
-  "遷移システムとしてのアプローチ",
+  "遷移システムとしてのアプローチ", "D",
   [
     左から一枚ずつタイルを並べることを考える.
     - 状態集合: $Q={"upper", "lower"} #symbol("⨯") Sigma^*$
@@ -188,7 +202,6 @@
     - 初期状態: $I = T(epsilon)$
     - $italic("Bad") = {epsilon}$
 
-    //TODO spacing dの前 0|eps 1^*
     #figure(image("./images/trsystem.png"))
     // 例えば, #pcp_tile("101", "1") の一枚だけが並んでいるとき, この状態は $("\"upper\"", "\"01\"")$ 次に,
     // もう一枚並べて #pcp_tile("101", "1") #pcp_tile("1", "0111") とすると, 状態は $("\"lower\"", "\"1\"")$ となる.
@@ -199,27 +212,17 @@
       - Interpolationが簡単に計算できるわけではないが, 反例のblockingなどは可能
       - Predicate Abstraction系は, 具体的な反例の構成が時間的に難しい
     - SATソルバによる $italic("Inv")$ の発見
-    - 部分文字列パターンの探索
+      - n状態のDFAで定式化すると $n^4$ 個の変数
+    - 幅優先的な場合分けによる探索
   ],
 )
 
 #section(
-  "部分文字列パターンの探索",
+  "幅優先的な場合分けによる探索","E",
   [
-  - 使用できる述語を, 次の2パターンに限定した.
-    + *部分文字列パターン* ex. $.*1101.*, .*011.*$
-    + *文字列* ex. $11110$
-    $italic("Inv") を, (.*1101.*) union (.*011.*) union {11110}$ のような形に限定することになる.
-  - 基本的にはBFSによる単純なPCPの解の探索だが, 積極的に上記の部分文字列パターンで abstraction を行う.
+  - 幅優先的に解を探索する方法をベースに, 各状態を積極的に正規言語で抽象化して, 閉じることを目指す.
   - $italic("Bad")$ に到達した場合, refinementはせず, バックトラック.
-  #sub_title("Pros")
-  - 包含判定が単純な文字列の包含として判定できるという性質の良さ.
-    - ex.#h(30pt) $".*1101.*" supset 11 #text("1101", fill: red) 00$ #h(30pt) $".*1101.*" supset .*11 #text("1101", fill: red) 10.*$
-    - 例えば, Badに行く状態の文字列で動的にGeneralized-Suffix-Treeを構築することで
-      - ある状態sが, 他のBadな状態を含んでいるかの判定: $O(|s|)$
-      - Badスペースから逆向きの探索を大量に行っておいて, 枝刈りできる
-  - ある状態をabstractする方法が十分に列挙可能な量に限られている
-    - これによって, 同じノードを指しやすい(閉じやすい)
+  - 各操作の複雑さは状態数に対して線形. スケールしやすい.
 
   #figure(
     raw-render(
@@ -264,23 +267,26 @@
 
                                     ```,
     ),
-    caption: [閉じた遷移の例 #pcp_tile(1111, 1) #pcp_tile(00, 11) #pcp_tile(1, 1100)],
+    caption: [(3)により閉じた遷移の例 #pcp_tile(1111, 1) #pcp_tile(00, 11) #pcp_tile(1, 1100)],
   )
+  #sub_title("抽象化の方針")
+  #set enum(numbering: "(1)")
+  + 正規言語すべて許す
+  + *$.*r.*$* か *具体的な文字列* のみを許す
+    - (1) より優秀. (1)は無駄な抽象化が多すぎるか
+  + *部分文字列パターン* か *具体的な文字列* のみを許す
+    - *部分文字列パターン*: $.*1101.*, .*011.*$
+    - 状態数が増えても, 各操作の計算量は変わらない!
+
+  #sub_title("(3)の利点")
+  - 包含判定が単純な文字列の包含として判定できるという性質の良さ.
+    - ex.#h(30pt) $".*1101.*" supset 11 #text("1101", fill: red) 00$ #h(30pt) $".*1101.*" supset .*11 #text("1101", fill: red) 10.*$
+    - 例えば, Badに行く状態の文字列で動的にGeneralized-Suffix-Treeを構築することで
+      - ある状態sが, 他のBadな状態を含んでいるかの判定: $O(|s|)$
+      - Badスペースから逆向きの探索を大量に行っておいて, 枝刈りできる
+  - ある状態を抽象化する方法が$|s|^2$個しかない
+    - これによって, 抽象化して同じノードを指しやすい(閉じやすい).
+    - 既存のノードの中から, 抽象化にあたるノードを探すのが, $O(|s|^2*c)$
+  *洞察: 局所的に悪い部分列があって, それが消せないことが多い*
   ],
 )
-
-#section("実験", [
-  #table(
-    columns: (1fr, auto, auto, auto),
-    inset: 10pt,
-    align: horizon,
-    [],
-    [*ベクトルの一致による緩和*],
-    [*部分文字列パターン*],
-    [*PDR*],
-    [PCP[3,4] #cite(<tacklepcp>)の残り],
-    [3041],
-    [2167],
-    [???],
-  )
-])

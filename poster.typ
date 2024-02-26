@@ -132,7 +132,7 @@
       rows: 2,
       columns: (title_column_size),
       column-gutter: 0pt,
-      row-gutter: 30pt,
+      row-gutter: 0pt,
       text(
         fill: rgb("#0053d6"),
         font: "Hiragino Kaku Gothic ProN",
@@ -150,7 +150,6 @@
   show: columns.with(num_columns, gutter: 32pt)
   set par(justify: true, first-line-indent: 0em)
   show par: set block(spacing: 0.65em)
-
   // Display the keywords.
   if keywords != () [
     #set text(24pt, weight: 400)
