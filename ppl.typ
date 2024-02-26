@@ -161,14 +161,14 @@
 
     単語 $w$ の出現回数を数えるようなトランスデューサ$v_w$を使うことができる.
     1. 単語集合 $W=\{\}$
-    2. $V_w=\{v_w | w in W\}$ から, 各単語の出現回数を出力する $v$ を作る. (x rarr (v2, v2,v3) みたいな)
+    2. 各単語の出現回数を出力するトランスデューサ $v$ を作る. $v(x) = (|x|_w_1,|x|_w_2,...)$ #h(70pt)  ($|x|_w_1$ は$x$における$w$の出現回数) 
     3. $v circle.stroked.tiny h(x)=v circle.stroked.tiny g(x)$ を解く
     4. $x$ が存在し, $h(x) eq.not g(x)$ なら, この $x$ をブロックするような単語を見つけ, $W$に追加.
   ],
 )
 #set align(left)
 
-#section("実験", "H", [
+#section("実験", "F", [
   #table(
     columns: (1fr, auto, auto, auto),
     inset: 10pt,
